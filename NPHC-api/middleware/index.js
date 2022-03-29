@@ -16,8 +16,6 @@ module.exports.validateBody = (schema) => (req, res, next) => {
 };
 
 module.exports.validatePath = (schema) => (req, res, next) => {
-  console.log('here');
-  console.log(req.params.Id);
   const { error } = schema.validate(req.params);
   const valid = error == null;
   if (valid) {

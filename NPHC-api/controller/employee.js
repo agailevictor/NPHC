@@ -1,7 +1,9 @@
 const moment = require('moment');
 const HttpStatus = require('http-status-codes');
 
-let userContoller = {
+var employeeManagementService = require('../services/employee');
+
+let employeeContoller = {
   hello(req, res) {
     var response = {};
     var source = '2021-04-21 07:00:00';
@@ -18,11 +20,19 @@ let userContoller = {
     response.message = `Hello ${name}, ${message}!`
     return res.status(HttpStatus.StatusCodes.OK).json(response);
   },
-  deleteTransaction(req, res) {
-    const { Id } = req.params;
-    var response = {};
-    response.message = `Deleted ${Id}!`
-    return res.status(HttpStatus.StatusCodes.OK).json(response);
+  fetchAllEmployees(req, res) {
+    employeeManagementService.handlefetchAllEmployees(req).then(result => {
+      return res.status(HttpStatus.StatusCodes.OK).json({ "employees": result[0] });
+    }).catch(error => {
+      return res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+    })
+  },
+  deleteEmployee(req, res) {
+    employeeManagementService.handleDeleteEmployee(req.params.Id).then(result => {
+      return res.status(HttpStatus.StatusCodes.NO_CONTENT).json({ "status": result[0] });
+    }).catch(error => {
+      return res.status(HttpStatus.StatusCodes.INTERNAL_SERVER_ERROR).json(error);
+    })
   }
 };
-module.exports = userContoller;
+module.exports = employeeContoller;
